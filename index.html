@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fontse - Font Selector</title>
+
+<!-- Google Fonts preload -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;700&family=Playfair+Display:wght@400;700&family=Pacifico&family=Fira+Code&family=Montserrat:wght@400;600&family=Lobster&family=Oswald:wght@400;600&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{--bg:#e0e0e0;--card-bg:#e0e0e0;--text:#222;--shadow-light:#fff;--shadow-dark:#b8b8b8;--accent:#0078ff;}
+body.dark{--bg:#1c1c1c;--card-bg:#1c1c1c;--text:#f5f5f5;--shadow-light:#2a2a2a;--shadow-dark:#0e0e0e;--accent:#00bfff;}
+*{box-sizing:border-box;font-family:'Poppins',sans-serif;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);display:flex;justify-content:center;align-items:flex-start;min-height:100vh;transition:background 0.6s,color 0.6s;}
+.app-frame{margin-top:2rem;width:95%;max-width:420px;background:var(--card-bg);border-radius:20px;box-shadow:8px 8px 16px var(--shadow-dark),-8px -8px 16px var(--shadow-light);padding:1.5rem;text-align:center;position:relative;transition:all 0.5s ease;}
+header h1{font-size:1.2rem;margin-bottom:1rem;font-weight:600;animation:fadeInDown 0.7s ease;}
+.toggle-mode{position:absolute;top:15px;right:15px;width:42px;height:42px;border-radius:50%;border:none;background:var(--card-bg);box-shadow:6px 6px 12px var(--shadow-dark),-6px -6px 12px var(--shadow-light);cursor:pointer;transition:all 0.3s ease;color:var(--text);font-size:18px;}
+.toggle-mode:hover{transform:scale(1.1);box-shadow:inset 6px 6px 12px var(--shadow-dark),inset -6px -6px 12px var(--shadow-light);}
+.selectors{display:flex;flex-direction:column;gap:1rem;align-items:center;animation:fadeInUp 0.8s ease;}
+select,input[type="text"]{width:100%;padding:0.7rem;border:none;border-radius:12px;background:var(--card-bg);color:var(--text);box-shadow:inset 4px 4px 8px var(--shadow-dark),inset -4px -4px 8px var(--shadow-light);font-size:0.95rem;text-align:center;outline:none;transition:box-shadow 0.2s ease;}
+select:focus,input[type="text"]:focus{box-shadow:inset 2px 2px 5px var(--shadow-dark),inset -2px -2px 5px var(--shadow-light);}
+.toggle-local{margin-bottom:0.5rem;padding:0.6rem 1rem;border-radius:15px;border:none;background:var(--card-bg);box-shadow:6px 6px 12px var(--shadow-dark),-6px -6px 12px var(--shadow-light);cursor:pointer;transition:all 0.3s; font-weight:600;}
+.toggle-local:hover{transform:scale(1.05);box-shadow:inset 6px 6px 12px var(--shadow-dark),inset -6px -6px 12px var(--shadow-light);}
+.search-box{width:100%;padding:0.6rem 1rem;border-radius:12px;border:none;background:var(--card-bg);box-shadow:inset 4px 4px 8px var(--shadow-dark),inset -4px -4px 8px var(--shadow-light);font-size:0.95rem;text-align:center;outline:none;transition:box-shadow 0.2s ease;margin-bottom:0.5rem;}
+.search-box:focus{box-shadow:inset 2px 2px 5px var(--shadow-dark),inset -2px -2px 5px var(--shadow-light);}
+.font-grid{margin-top:1rem;display:flex;flex-direction:column;gap:1rem;animation:fadeInUp 0.8s ease; max-height:400px; overflow-y:auto; scrollbar-width:thin;}
+.font-card{background:var(--card-bg);border-radius:15px;padding:1rem;box-shadow:6px 6px 12px var(--shadow-dark),-6px -6px 12px var(--shadow-light);transition:transform 0.3s ease,box-shadow 0.3s ease;opacity:0;animation:fadeIn 0.6s forwards;}
+.font-card:hover{transform:translateY(-3px);}
+.font-preview{font-size:1.3rem;margin:0.5rem 0;animation:fadeIn 1s ease;}
+.copy-btn,.download-btn{background:var(--accent);color:white;border:none;border-radius:10px;padding:0.4rem 0.8rem;cursor:pointer;font-size:0.9rem;box-shadow:4px 4px 8px var(--shadow-dark),-4px -4px 8px var(--shadow-light);transition:transform 0.2s,box-shadow 0.2s;margin:0.2rem;}
+.copy-btn:hover,.download-btn:hover{transform:scale(1.05);box-shadow:inset 3px 3px 6px var(--shadow-dark),inset -3px -3px 6px var(--shadow-light);}
+footer{text-align:center;font-size:0.8rem;margin-top:1rem;opacity:0.7;animation:fadeInUp 1s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+
+<body>
+<div class="app-frame">
+  <button class="toggle-mode" title="Toggle Dark Mode">🌙</button>
+  <header><h1>🎨 Fontse</h1></header>
+
+  <div class="selectors">
+    <button class="toggle-local" id="showAllLocal">Show All Local Fonts: OFF</button>
+    <input type="text" class="search-box" id="searchFont" placeholder="Search fonts...">
+    <select id="designType">
+      <option value="">Select Design Type</option>
+      <option value="logo">Logo</option>
+      <option value="website">Website</option>
+      <option value="poster">Poster</option>
+      <option value="business">Business Card</option>
+      <option value="social">Social Media Post</option>
+    </select>
+    <select id="fontStyle">
+      <option value="">Select Font Style</option>
+      <option value="serif">Serif</option>
+      <option value="sans-serif">Sans-serif</option>
+      <option value="display">Display</option>
+      <option value="handwriting">Handwriting</option>
+      <option value="monospace">Monospace</option>
+    </select>
+    <input type="text" id="sampleText" placeholder="Type sample text to preview..." value="Your Design Text Here">
+  </div>
+
+  <div class="font-grid" id="fontGrid"></div>
+  <footer>© Manik Roy 2025. All Rights Reserved.</footer>
+</div>
+
+<script>
+// --------- Local Font Detection ---------
+const commonFonts=["Arial","Verdana","Helvetica","Tahoma","Trebuchet MS","Times New Roman","Georgia","Garamond","Courier New","Brush Script MT","Impact","Comic Sans MS"];
+function isFontAvailable(font){
+  const canvas=document.createElement("canvas");
+  const context=canvas.getContext("2d");
+  const text="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  context.font="72px monospace";
+  const baselineWidth=context.measureText(text).width;
+  context.font=`72px '${font}', monospace`;
+  return context.measureText(text).width!==baselineWidth;
+}
+const availableLocalFonts=commonFonts.filter(isFontAvailable);
+
+// --------- Google Fonts ---------
+const googleFonts=["Poppins","Roboto","Playfair Display","Pacifico","Fira Code","Montserrat","Lobster","Oswald","Raleway"];
+googleFonts.forEach(f=>{
+  const link=document.createElement('link');
+  link.href=`https://fonts.googleapis.com/css2?family=${f.replace(/ /g,"+")}&display=swap`;
+  link.rel="stylesheet";
+  document.head.appendChild(link);
+});
+
+// --------- Fonts Database ---------
+const fonts=[
+  ...availableLocalFonts.map(f=>({name:f,style:'sans-serif',types:['website','business','poster','social','logo'],local:true})),
+  ...googleFonts.map(f=>({name:f,style:'sans-serif',types:['website','business','poster','social','logo'],local:false}))
+];
+
+const designSelect=document.getElementById('designType');
+const styleSelect=document.getElementById('fontStyle');
+const fontGrid=document.getElementById('fontGrid');
+const sampleText=document.getElementById('sampleText');
+const modeToggle=document.querySelector('.toggle-mode');
+const toggleLocal=document.getElementById('showAllLocal');
+const searchInput=document.getElementById('searchFont');
+
+let showAllLocal=false;
+
+// --------- Show Fonts ---------
+function showFonts(){
+  const design=designSelect.value;
+  const style=styleSelect.value;
+  const text=sampleText.value.trim()||'Sample Text';
+  const searchText=searchInput.value.trim().toLowerCase();
+  
+  let filtered=[];
+  if(showAllLocal){
+    filtered=fonts.filter(f=>f.local);
+  } else {
+    filtered=fonts.filter(f=>(!design||f.types.includes(design))&&(!style||f.style===style));
+    filtered=filtered.sort((a,b)=>googleFonts.includes(a.name)?-1:1).slice(0,10);
+  }
+  
+  if(searchText!==""){
+    filtered=filtered.filter(f=>f.name.toLowerCase().includes(searchText));
+  }
+
+  fontGrid.innerHTML='';
+  if(filtered.length===0){fontGrid.innerHTML='<p style="opacity:0.6;">No matching fonts found.</p>';return;}
+
+  filtered.forEach((f,i)=>{
+    const card=document.createElement('div');card.className='font-card';card.style.animationDelay=`${i*0.1}s`;
+    const preview=document.createElement('p');preview.className='font-preview';preview.style.fontFamily=`'${f.name}', ${f.style}`;preview.textContent=text;
+    const name=document.createElement('p');name.textContent=f.name;
+    const copyBtn=document.createElement('button');copyBtn.className='copy-btn';copyBtn.textContent='Copy Name';
+    copyBtn.onclick=()=>{navigator.clipboard.writeText(f.name);copyBtn.textContent='Copied!';setTimeout(()=>copyBtn.textContent='Copy Name',1500);}
+    const downloadBtn=document.createElement('button');downloadBtn.className='download-btn';
+    if(f.local){downloadBtn.textContent='Installed';downloadBtn.disabled=true;}
+    else{downloadBtn.textContent='Download';downloadBtn.onclick=()=>window.open(`https://fonts.google.com/specimen/${f.name.replace(/ /g,'+')}`);}
+    card.append(preview,name,copyBtn,downloadBtn);
+    fontGrid.appendChild(card);
+  });
+}
+
+// --------- Event Listeners ---------
+designSelect.addEventListener('change',showFonts);
+styleSelect.addEventListener('change',showFonts);
+sampleText.addEventListener('input',showFonts);
+searchInput.addEventListener('input',showFonts);
+modeToggle.addEventListener('click',()=>{document.body.classList.toggle('dark');modeToggle.textContent=document.body.classList.contains('dark')?'☀️':'🌙';});
+toggleLocal.addEventListener('click',()=>{
+  showAllLocal=!showAllLocal;
+  toggleLocal.textContent=`Show All Local Fonts: ${showAllLocal?'ON':'OFF'}`;
+  showFonts();
+});
+
+showFonts();
+</script>
+</body>
+</html>
